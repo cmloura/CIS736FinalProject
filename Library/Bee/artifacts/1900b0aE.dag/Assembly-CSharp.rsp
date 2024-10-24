@@ -358,6 +358,7 @@
 "Assets/Scripts/MapGenerator.cs"
 "Assets/Scripts/MeshGenerator.cs"
 "Assets/Scripts/Noise.cs"
+"Assets/Scripts/TextureGenerator.cs"
 "Assets/Scripts/ThirdPersonMovement.cs"
 -langversion:9.0
 /deterministic
