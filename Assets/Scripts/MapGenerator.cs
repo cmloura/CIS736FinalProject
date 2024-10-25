@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    const int mapchunksize = 241;
+    public const int mapchunksize = 241;
     [Range(0,6)]
     public int levelOfDetail;
     public enum DrawMode {NoiseMap, ColorMap, Mesh}
