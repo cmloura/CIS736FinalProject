@@ -22,7 +22,9 @@ public class MeshGenerator
         {
             for (int x = 0; x < width; x+= meshsimplificationincrement)
             {
+                lock(ac){
                 meshdata.vertices[vertexindex] = new Vector3(topleftx + x, ac.Evaluate(heightmap[x, y]) * heightmultiplier, topleftz - y);
+                }
                 meshdata.uvs[vertexindex] = new Vector2((x / (float)width), (y / (float)height));
 
                 if ((x < width - 1) && (y < height - 1))
