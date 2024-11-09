@@ -67,8 +67,11 @@
     <Compile Include="Assets\Scripts\MeshGenerator.cs" />
     <Compile Include="Assets\Scripts\MapGenerator.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonMovement.cs" />
+    <Compile Include="Assets\HandleScript.cs" />
     <Compile Include="Assets\Scripts\TextureGenerator.cs" />
+    <Compile Include="Assets\SliderScript.cs" />
     <Compile Include="Assets\Scripts\MapDisplay.cs" />
+    <Compile Include="Assets\MainMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
