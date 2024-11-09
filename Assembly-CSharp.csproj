@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{D18AAD5A-CE8A-648A-D9ED-6F7F468AEBAD}</ProjectGuid>
+    <ProjectGuid>{D0044344-AD5B-0778-3765-951C141C198C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -66,6 +66,7 @@
     <Compile Include="Assets\Animations\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\MeshGenerator.cs" />
     <Compile Include="Assets\Scripts\MapGenerator.cs" />
+    <Compile Include="Assets\Scripts\FalloffGenerator.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonMovement.cs" />
     <Compile Include="Assets\HandleScript.cs" />
     <Compile Include="Assets\Scripts\TextureGenerator.cs" />
