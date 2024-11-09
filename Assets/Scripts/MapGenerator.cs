@@ -9,7 +9,7 @@ public class MapGenerator : MonoBehaviour
     public const int mapchunksize = 241;
     [Range(0,6)]
     public int editorPreviewLOD;
-    public enum DrawMode {NoiseMap, ColorMap, Mesh}
+    public enum DrawMode {NoiseMap, ColorMap, Mesh, FalloffMap}
     public DrawMode drawmode;
     public Noise.NormalizeMode normalisemode;
     public float noiseScale;
@@ -25,10 +25,16 @@ public class MapGenerator : MonoBehaviour
     public Vector2 offset;
 
     public bool autoUpdate;
+    public bool useFalloff;
     public TerrainType[] regions;
+    float[,] falloffMap;
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new(); 
     Queue<MapThreadInfo<MeshData>> meshDataThreadInfoQueue = new();
     
+    void Awake()
+    {
+        falloffMap = FalloffGenerator.GenerateFalloffMap(mapchunksize);
+    }
     public void DrawMapInEditor()
     {
         MapData mapdata = GenerateMapData(Vector2.zero);
@@ -45,6 +51,9 @@ public class MapGenerator : MonoBehaviour
             case DrawMode.Mesh:
                 display.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapdata.heightMap, meshHeightMultiplier, meshheightcurve, editorPreviewLOD), TextureGenerator.TextureFromColorMap(mapdata.colorMap, mapchunksize, mapchunksize));
                 break;
+            case DrawMode.FalloffMap:
+                display.DrawTexture(TextureGenerator.TextureFromHeightMap(FalloffGenerator.GenerateFalloffMap(mapchunksize)));
+                break;
         }
     }
     MapData GenerateMapData(Vector2 center)
@@ -56,6 +65,10 @@ public class MapGenerator : MonoBehaviour
         {
             for(int x = 0; x < mapchunksize; x++)
             {
+                if(useFalloff)
+                {
+                    map[x,y] = Mathf.Clamp01(map[x,y] - falloffMap[x,y]);
+                }
                 float currentHeight = map[x,y];
                 for(int i = 0; i < regions.Length; i++)
                 {
@@ -85,6 +98,7 @@ public class MapGenerator : MonoBehaviour
         {
             octaves = 0;
         }
+        falloffMap = FalloffGenerator.GenerateFalloffMap(mapchunksize);
     }
 
     public void RequestMeshData(MapData mapdata, int lod, Action<MeshData> callback)
