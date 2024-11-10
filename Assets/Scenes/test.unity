@@ -343,6 +343,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Guy
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 105df366a6c29ac4f8fd1abddc0120db, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 105df366a6c29ac4f8fd1abddc0120db, type: 3}
       propertyPath: m_Controller
       value: 
@@ -899,7 +903,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9c289f6d56adbb847ab9e20b70930e92, type: 3}
       propertyPath: m_Name
-      value: karakter_kucing_v2_Rig
+      value: Cat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -910,6 +914,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9c289f6d56adbb847ab9e20b70930e92, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1875671026}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9c289f6d56adbb847ab9e20b70930e92, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1875671028}
   m_SourcePrefab: {fileID: 100100000, guid: 9c289f6d56adbb847ab9e20b70930e92, type: 3}
 --- !u!1 &1875671025 stripped
 GameObject:
@@ -936,6 +943,23 @@ TerrainCollider:
   serializedVersion: 2
   m_TerrainData: {fileID: 0}
   m_EnableTreeColliders: 1
+--- !u!114 &1875671028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875671025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98792a41e6b1acf4cba68f55dec740d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerDistance: 0
+  speed: 1
+  gravity: -9.81
+  jumpHeight: 2
+  groundCheckDistance: 0.1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

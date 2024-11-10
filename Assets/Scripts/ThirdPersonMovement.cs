@@ -16,15 +16,18 @@ public class ThirdPersonMovement : MonoBehaviour
     public float rotationFactorPerFrame = 15.0f;
     public float gravity = -9.81f;
     public float groundedGravity = -0.5f;
+    public float jumpHeight = 3.0f; // Height of the jump
 
     int isWalkingHash;
     int isRunningHash;
+    int isJumpingHash;
 
     Vector2 currentMovementInput;
     Vector3 currentMovement;
     Vector3 moveDirection;
     bool isMovementPressed;
     bool isRunPressed;
+    bool isJumpPressed;
     float turnsmoothvelocity;
     float verticalVelocity = 0f; // Vertical speed for gravity
 
@@ -33,15 +36,18 @@ public class ThirdPersonMovement : MonoBehaviour
         playerInput = new PlayerInput();
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        
+
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
+        isJumpingHash = Animator.StringToHash("isJumping");
 
         playerInput.CharacterControls.Move.started += onMovementInput;
         playerInput.CharacterControls.Move.canceled += onMovementInput;
         playerInput.CharacterControls.Move.performed += onMovementInput;
         playerInput.CharacterControls.Run.started += onRun;
         playerInput.CharacterControls.Run.canceled += onRun;
+        playerInput.CharacterControls.Jump.started += onJump; // Add jump input listener
+        playerInput.CharacterControls.Jump.canceled += onJump;
     }
 
     void onMovementInput(InputAction.CallbackContext context)
@@ -53,6 +59,11 @@ public class ThirdPersonMovement : MonoBehaviour
     void onRun(InputAction.CallbackContext context)
     {
         isRunPressed = context.ReadValueAsButton();
+    }
+
+    void onJump(InputAction.CallbackContext context)
+    {
+        isJumpPressed = context.ReadValueAsButton();
     }
 
     void handleRotation()
@@ -88,14 +99,28 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             animator.SetBool(isRunningHash, false);
         }
+
+        if (isJumpPressed)
+        {
+            animator.SetBool(isJumpingHash, true);
+        }
+        if (characterController.isGrounded)
+        {
+            animator.SetBool(isJumpingHash, false);
+        }
     }
 
-    void handleGravity()
+    void handleGravityAndJump()
     {
         if (characterController.isGrounded)
         {
-            // Set a slight negative vertical velocity to keep the character grounded
-            verticalVelocity = groundedGravity;
+            verticalVelocity = groundedGravity; // Set slight negative value to keep grounded
+
+            // Allow jumping only when grounded
+            if (isJumpPressed)
+            {
+                verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            }
         }
         else
         {
@@ -103,23 +128,24 @@ public class ThirdPersonMovement : MonoBehaviour
             verticalVelocity += gravity * Time.deltaTime;
         }
 
-        currentMovement.y = verticalVelocity; // Apply the vertical velocity
+        // Apply the vertical velocity to the current movement regardless of horizontal movement
+        currentMovement.y = verticalVelocity;
     }
 
     void Update()
     {
-        handleGravity();
+        Debug.Log("Is Grounded: " + characterController.isGrounded);
+        handleGravityAndJump();
         handleRotation();
         handleAnimation();
 
-        if(isMovementPressed)
-        {
-            float speed = isRunPressed ? runSpeed : walkSpeed;
-            Vector3 horizontalMovement = moveDirection * speed;    
-            Vector3 finalMovement = horizontalMovement + Vector3.up * verticalVelocity;
-            characterController.Move(finalMovement * Time.deltaTime);
-        }
-        
+        // Calculate the movement
+        float speed = isRunPressed ? runSpeed : walkSpeed;
+        Vector3 horizontalMovement = isMovementPressed ? moveDirection * speed : Vector3.zero;
+        Vector3 finalMovement = horizontalMovement + Vector3.up * verticalVelocity;
+
+        // Move the character regardless of horizontal input to ensure gravity is applied
+        characterController.Move(finalMovement * Time.deltaTime);
     }
 
     private void OnEnable()
