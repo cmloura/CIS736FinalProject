@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class InfiniteTerrain : MonoBehaviour
 {
-    const float scale = 2f;
     const float viewermovethresholdforchunkupdate = 25f;
     const float squareviewermovethresholdforchunkupdate = viewermovethresholdforchunkupdate * viewermovethresholdforchunkupdate;
     
@@ -34,7 +33,7 @@ public class InfiniteTerrain : MonoBehaviour
 
     void Update()
     {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z) / scale;
+        viewerPosition = new Vector2(viewer.position.x, viewer.position.z) / mapgenerator.terraindata.uniformscale;
         if((viewerpositionold-viewerPosition).sqrMagnitude > squareviewermovethresholdforchunkupdate)
         {
             viewerpositionold = viewerPosition;
@@ -85,6 +84,7 @@ public class InfiniteTerrain : MonoBehaviour
         MeshCollider meshcollider;
         LODInfo[] detaillevels;
         LODMesh[] lodmeshes;
+        LODMesh collisionLODmesh;
         MapGenerator.MapData mapdata;
         bool mapdatareceived;
         int prevlodindex = -1;
@@ -102,15 +102,19 @@ public class InfiniteTerrain : MonoBehaviour
             meshcollider = meshObject.AddComponent<MeshCollider>();
             meshrenderer.material = material;
 
-            meshObject.transform.position = pv3 * scale;
+            meshObject.transform.position = pv3 * mapgenerator.terraindata.uniformscale;
             meshObject.transform.parent = parent;
-            meshObject.transform.localScale = Vector3.one * scale;
+            meshObject.transform.localScale = Vector3.one * mapgenerator.terraindata.uniformscale;
             SetVisible(false);
             lodmeshes = new LODMesh[detaillevels.Length];
 
             for(int i = 0; i < detaillevels.Length; i++)
             {
                 lodmeshes[i] = new LODMesh(this.detaillevels[i].lod, UpdateTerrainChunk);
+                if(detaillevels[i].useforcollider)
+                {
+                    collisionLODmesh = lodmeshes[i];
+                }
             }
 
             mapgenerator.RequestMapData(position, OnMapDataReceived);
@@ -120,8 +124,6 @@ public class InfiniteTerrain : MonoBehaviour
         {
             this.mapdata = mapdata;
             mapdatareceived = true;
-            Texture2D texture = TextureGenerator.TextureFromColorMap(mapdata.colorMap, MapGenerator.mapchunksize, MapGenerator.mapchunksize);
-            meshrenderer.material.mainTexture = texture;
             UpdateTerrainChunk();
         }
 
@@ -157,11 +159,21 @@ public class InfiniteTerrain : MonoBehaviour
                         {
                             prevlodindex = lodindex;
                             meshfilter.mesh = lodmesh.mesh;
-                            meshcollider.sharedMesh = lodmesh.mesh;
                         }
                         else if(!lodmesh.hasRequestedMesh)
                         {
                             lodmesh.RequestMesh(mapdata);
+                        }
+                    }
+                    if(lodindex == 0)
+                    {
+                        if(collisionLODmesh.hasMesh)
+                        {
+                            meshcollider.sharedMesh = collisionLODmesh.mesh;
+                        }
+                        else if(!collisionLODmesh.hasRequestedMesh)
+                        {
+                            collisionLODmesh.RequestMesh(mapdata);
                         }
                     }
                     terrainChunksVisibleLastUpdate.Add(this);
@@ -214,5 +226,6 @@ public class InfiniteTerrain : MonoBehaviour
     {
         public int lod;
         public float visibleDistanceThreshold;
+        public bool useforcollider;
     }
 }

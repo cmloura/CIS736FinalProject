@@ -359,6 +359,12 @@
 -analyzer:"D:/Program Files/Unity/Hub/Editor/2022.3.44f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/AnimationAndMovementControl.cs"
 "Assets/Animations/PlayerInput.cs"
+"Assets/HandleScript.cs"
+"Assets/MainMenu.cs"
+"Assets/Scripts/Data/NoiseData.cs"
+"Assets/Scripts/Data/TerrainData.cs"
+"Assets/Scripts/Data/TextureData.cs"
+"Assets/Scripts/Data/UpdateableData.cs"
 "Assets/Scripts/FalloffGenerator.cs"
 "Assets/Scripts/HideOnPlay.cs"
 "Assets/Scripts/InfiniteTerrain.cs"
@@ -368,6 +374,7 @@
 "Assets/Scripts/Noise.cs"
 "Assets/Scripts/TextureGenerator.cs"
 "Assets/Scripts/ThirdPersonMovement.cs"
+"Assets/SliderScript.cs"
 -langversion:9.0
 /deterministic
 /optimize+
