@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InfiniteTerrain : MonoBehaviour
 {
-    const float scale = 1f;
+    const float scale = 2f;
     const float viewermovethresholdforchunkupdate = 25f;
     const float squareviewermovethresholdforchunkupdate = viewermovethresholdforchunkupdate * viewermovethresholdforchunkupdate;
     
@@ -82,6 +82,7 @@ public class InfiniteTerrain : MonoBehaviour
         Bounds bounds;
         MeshRenderer meshrenderer;
         MeshFilter meshfilter;
+        MeshCollider meshcollider;
         LODInfo[] detaillevels;
         LODMesh[] lodmeshes;
         MapGenerator.MapData mapdata;
@@ -98,7 +99,9 @@ public class InfiniteTerrain : MonoBehaviour
             meshObject = new GameObject("Terrain Chunk");
             meshrenderer = meshObject.AddComponent<MeshRenderer>();
             meshfilter = meshObject.AddComponent<MeshFilter>();
+            meshcollider = meshObject.AddComponent<MeshCollider>();
             meshrenderer.material = material;
+
             meshObject.transform.position = pv3 * scale;
             meshObject.transform.parent = parent;
             meshObject.transform.localScale = Vector3.one * scale;
@@ -154,6 +157,7 @@ public class InfiniteTerrain : MonoBehaviour
                         {
                             prevlodindex = lodindex;
                             meshfilter.mesh = lodmesh.mesh;
+                            meshcollider.sharedMesh = lodmesh.mesh;
                         }
                         else if(!lodmesh.hasRequestedMesh)
                         {
