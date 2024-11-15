@@ -2964,7 +2964,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cat Expedition
+  m_text: Silent Horizons
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 315855e19f9d669498c1c90def6d4e8b, type: 2}
   m_sharedMaterial: {fileID: -6156074173310339117, guid: 315855e19f9d669498c1c90def6d4e8b, type: 2}

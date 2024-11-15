@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class ThirdPersonMovement : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class ThirdPersonMovement : MonoBehaviour
     Animator animator;
 
     public Transform cam; // Camera reference for directional movement
+    public Transform map;
+    public Transform fwks;
     public float walkSpeed = 6f;
     public float runSpeed = 18f;
     public float smooth = 0.1f;
@@ -21,6 +24,7 @@ public class ThirdPersonMovement : MonoBehaviour
     int isWalkingHash;
     int isRunningHash;
     int isJumpingHash;
+    int interactTriggerHash;
 
     Vector2 currentMovementInput;
     Vector3 currentMovement;
@@ -28,6 +32,8 @@ public class ThirdPersonMovement : MonoBehaviour
     bool isMovementPressed;
     bool isRunPressed;
     bool isJumpPressed;
+    bool isInteractPressed;
+    bool isGrounded;
     float turnsmoothvelocity;
     float verticalVelocity = 0f; // Vertical speed for gravity
 
@@ -40,6 +46,7 @@ public class ThirdPersonMovement : MonoBehaviour
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
         isJumpingHash = Animator.StringToHash("isJumping");
+        interactTriggerHash = Animator.StringToHash("isInteracting"); // Using a trigger for interaction
 
         playerInput.CharacterControls.Move.started += onMovementInput;
         playerInput.CharacterControls.Move.canceled += onMovementInput;
@@ -48,6 +55,8 @@ public class ThirdPersonMovement : MonoBehaviour
         playerInput.CharacterControls.Run.canceled += onRun;
         playerInput.CharacterControls.Jump.started += onJump; // Add jump input listener
         playerInput.CharacterControls.Jump.canceled += onJump;
+        playerInput.CharacterControls.Interact.started += onClick;
+        playerInput.CharacterControls.Interact.canceled += onClick;
     }
 
     void onMovementInput(InputAction.CallbackContext context)
@@ -66,9 +75,14 @@ public class ThirdPersonMovement : MonoBehaviour
         isJumpPressed = context.ReadValueAsButton();
     }
 
+    void onClick(InputAction.CallbackContext context)
+    {
+        isInteractPressed = context.ReadValueAsButton();
+    }
+
     void handleRotation()
     {
-        if (isMovementPressed)
+        if (isMovementPressed && !animator.GetBool("isInInteractState")) // Check if the character is interacting
         {
             float targetAngle = Mathf.Atan2(currentMovementInput.x, currentMovementInput.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnsmoothvelocity, smooth);
@@ -82,7 +96,8 @@ public class ThirdPersonMovement : MonoBehaviour
         bool isWalking = animator.GetBool(isWalkingHash);
         bool isRunning = animator.GetBool(isRunningHash);
 
-        if (isMovementPressed && !isWalking)
+        // Walking animation
+        if (isMovementPressed && !isWalking && !animator.GetBool("isInInteractState")) // Prevent walking when interacting
         {
             animator.SetBool(isWalkingHash, true);
         }
@@ -91,7 +106,8 @@ public class ThirdPersonMovement : MonoBehaviour
             animator.SetBool(isWalkingHash, false);
         }
 
-        if (isMovementPressed && isRunPressed && !isRunning)
+        // Running animation
+        if (isMovementPressed && isRunPressed && !isRunning && !animator.GetBool("isInInteractState")) // Prevent running when interacting
         {
             animator.SetBool(isRunningHash, true);
         }
@@ -100,24 +116,38 @@ public class ThirdPersonMovement : MonoBehaviour
             animator.SetBool(isRunningHash, false);
         }
 
-        if (isJumpPressed)
+        // Jumping animation
+        if (isJumpPressed && !animator.GetBool("isInInteractState")) // Prevent jumping during interaction
         {
             animator.SetBool(isJumpingHash, true);
         }
-        if (characterController.isGrounded)
+        if (isGrounded)
         {
             animator.SetBool(isJumpingHash, false);
         }
+
+        // Interaction animation (triggered once and then reset)
+        if (isInteractPressed && !animator.GetBool("isInInteractState"))
+        {
+            animator.SetTrigger(interactTriggerHash);
+            animator.SetBool("isInInteractState", true); // Set flag to indicate interaction is happening
+            isInteractPressed = false;  // Reset the flag to prevent continuous animation triggering
+        }
+        else
+        {
+            animator.ResetTrigger(interactTriggerHash);
+        }
     }
+
 
     void handleGravityAndJump()
     {
-        if (characterController.isGrounded)
+        if (isGrounded)
         {
             verticalVelocity = groundedGravity; // Set slight negative value to keep grounded
 
             // Allow jumping only when grounded
-            if (isJumpPressed)
+            if (isJumpPressed && !animator.GetBool("isInInteractState")) // Prevent jumping during interaction
             {
                 verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
             }
@@ -132,17 +162,32 @@ public class ThirdPersonMovement : MonoBehaviour
         currentMovement.y = verticalVelocity;
     }
 
+    void FixedUpdate()
+    {
+        isGrounded = characterController.isGrounded || Physics.Raycast(transform.position, Vector3.down, 0.1f);
+    }
+
     void Update()
     {
-        Debug.Log("Is Grounded: " + characterController.isGrounded);
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        Vector3 finalMovement;
+        Vector3 horizontalMovement;
+
         handleGravityAndJump();
         handleRotation();
         handleAnimation();
 
-        // Calculate the movement
-        float speed = isRunPressed ? runSpeed : walkSpeed;
-        Vector3 horizontalMovement = isMovementPressed ? moveDirection * speed : Vector3.zero;
-        Vector3 finalMovement = horizontalMovement + Vector3.up * verticalVelocity;
+        // Calculate the movement, but only allow movement when not interacting
+        if (animator.GetBool("isInInteractState") && !isRunPressed) // Prevent movement while interacting
+        {
+            finalMovement = Vector3.zero + Vector3.up * verticalVelocity;
+        }
+        else
+        {
+            float speed = isRunPressed ? runSpeed : walkSpeed;
+            horizontalMovement = isMovementPressed ? moveDirection * speed : Vector3.zero;
+            finalMovement = horizontalMovement + Vector3.up * verticalVelocity;
+        }
 
         // Move the character regardless of horizontal input to ensure gravity is applied
         characterController.Move(finalMovement * Time.deltaTime);

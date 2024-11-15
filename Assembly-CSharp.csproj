@@ -61,20 +61,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\HideOnPlay.cs" />
-    <Compile Include="Assets\AnimationAndMovementControl.cs" />
+    <Compile Include="Assets\Scripts\J Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\InfiniteTerrain.cs" />
+    <Compile Include="Assets\Scripts\J Scripts\Done.cs" />
+    <Compile Include="Assets\Scripts\J Scripts\Compass.cs" />
     <Compile Include="Assets\Scripts\Noise.cs" />
-    <Compile Include="Assets\Animations\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\MeshGenerator.cs" />
     <Compile Include="Assets\Scripts\MapGenerator.cs" />
     <Compile Include="Assets\Scripts\FalloffGenerator.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonMovement.cs" />
-    <Compile Include="Assets\HandleScript.cs" />
     <Compile Include="Assets\Scripts\TextureGenerator.cs" />
-    <Compile Include="Assets\SliderScript.cs" />
+    <Compile Include="Assets\Scripts\J Scripts\SliderScript.cs" />
+    <Compile Include="Assets\Scripts\J Scripts\HandleScript.cs" />
+    <Compile Include="Assets\Animator Files\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\EnemyFollow.cs" />
     <Compile Include="Assets\Scripts\MapDisplay.cs" />
-    <Compile Include="Assets\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\J Scripts\AnimationAndMovementControl.cs" />
+    <Compile Include="Assets\Scripts\J Scripts\IdleCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
