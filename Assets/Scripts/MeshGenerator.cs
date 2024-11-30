@@ -100,7 +100,7 @@ public class MeshData
         else
         {
             vertices[vertexindex] = vertexposition;
-            uvs[vertexindex] = uv;
+            uvs[vertexindex] = new Vector2(0, vertexposition.y);
         }
     }
     public void AddTriangle(int a, int b, int c)
