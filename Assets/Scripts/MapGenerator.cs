@@ -15,7 +15,9 @@ public class MapGenerator : MonoBehaviour
     public NoiseData noisedata;
     public TextureData texturedata;
     public Material terrainmaterial;
-    
+    public WaterGenerator watergenerator;
+    public TreeGenerator treegenerator;
+    public InfiniteTerrain.TerrainChunk terrainchunk;
 
     public bool autoUpdate;
     float[,] falloffMap;
@@ -39,8 +41,19 @@ public class MapGenerator : MonoBehaviour
                 display.DrawTexture(TextureGenerator.TextureFromHeightMap(FalloffGenerator.GenerateFalloffMap(mapchunksize)));
                 break;
         }
+
+        if (treegenerator != null)
+        {
+            treegenerator.GenerateTrees(mapdata.heightMap);
+        }
+
+        if (watergenerator != null)
+        {
+            watergenerator.GenerateWater(mapdata.heightMap, terraindata);
+        }
+
     }
-    MapData GenerateMapData(Vector2 center)
+    public MapData GenerateMapData(Vector2 center)
     {
         float[,] map = Noise.GenerateNoiseMap(mapchunksize+2, mapchunksize+2, noisedata.seed, noisedata.noiseScale, noisedata.octaves, noisedata.persistence, noisedata.lacunarity, center + noisedata.offset, noisedata.normalisemode);
 

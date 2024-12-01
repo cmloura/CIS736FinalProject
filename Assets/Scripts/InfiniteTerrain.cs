@@ -10,16 +10,19 @@ public class InfiniteTerrain : MonoBehaviour
     public static float maxViewDistance;
     public LODInfo[] detailLevels;
     public Transform viewer;
-    static MapGenerator mapgenerator;
+    public static MapGenerator mapgenerator;
     public Material mapmaterial;
     Vector2 viewerpositionold;
     public static Vector2 viewerPosition;
+    public GameObject treePrefab;
+    public int minTreesPerChunk = 5;
+    public int maxTreesPerChunk = 10;
 
     int chunksize;
     int chunksVisibleInViewDistance;
 
     Dictionary<Vector2, TerrainChunk> terrainChunkDict = new();
-    static List<TerrainChunk> terrainChunksVisibleLastUpdate = new();
+    public static List<TerrainChunk> terrainChunksVisibleLastUpdate = new();
 
     void Start()
     {
@@ -82,14 +85,16 @@ public class InfiniteTerrain : MonoBehaviour
         MeshRenderer meshrenderer;
         MeshFilter meshfilter;
         MeshCollider meshcollider;
-        LODInfo[] detaillevels;
-        LODMesh[] lodmeshes;
-        LODMesh collisionLODmesh;
+        InfiniteTerrain.LODInfo[] detaillevels;
+        InfiniteTerrain.LODMesh[] lodmeshes;
+        InfiniteTerrain.LODMesh collisionLODmesh;
         MapGenerator.MapData mapdata;
         bool mapdatareceived;
         int prevlodindex = -1;
+        private List<GameObject> spawnedTrees = new();
 
-        public TerrainChunk(Vector2 coord, int size, LODInfo[] detaillevels, Transform parent, Material material)
+
+        public TerrainChunk(Vector2 coord, int size, InfiniteTerrain.LODInfo[] detaillevels, Transform parent, Material material)
         {
             this.detaillevels = detaillevels;
             position = coord * size;
@@ -102,22 +107,112 @@ public class InfiniteTerrain : MonoBehaviour
             meshcollider = meshObject.AddComponent<MeshCollider>();
             meshrenderer.material = material;
 
-            meshObject.transform.position = pv3 * mapgenerator.terraindata.uniformscale;
+            meshObject.transform.position = pv3 * InfiniteTerrain.mapgenerator.terraindata.uniformscale;
             meshObject.transform.parent = parent;
-            meshObject.transform.localScale = Vector3.one * mapgenerator.terraindata.uniformscale;
+            meshObject.transform.localScale = Vector3.one * InfiniteTerrain.mapgenerator.terraindata.uniformscale;
             SetVisible(false);
-            lodmeshes = new LODMesh[detaillevels.Length];
+            lodmeshes = new InfiniteTerrain.LODMesh[detaillevels.Length];
 
             for(int i = 0; i < detaillevels.Length; i++)
             {
-                lodmeshes[i] = new LODMesh(this.detaillevels[i].lod, UpdateTerrainChunk);
+                lodmeshes[i] = new InfiniteTerrain.LODMesh(this.detaillevels[i].lod, UpdateTerrainChunk);
                 if(detaillevels[i].useforcollider)
                 {
                     collisionLODmesh = lodmeshes[i];
                 }
             }
 
-            mapgenerator.RequestMapData(position, OnMapDataReceived);
+            InfiniteTerrain.mapgenerator.RequestMapData(position, OnMapDataReceived);
+        }
+
+        void SpawnTrees()
+        {
+            // Get reference to the tree spawning parameters from the InfiniteTerrain instance
+            InfiniteTerrain terrainGenerator = UnityEngine.Object.FindObjectOfType<InfiniteTerrain>();
+            if (terrainGenerator == null || terrainGenerator.treePrefab == null) return;
+
+            // Clear any previously spawned trees
+            foreach (GameObject tree in spawnedTrees)
+            {
+                if (tree != null)
+                    UnityEngine.Object.Destroy(tree);
+            }
+            spawnedTrees.Clear();
+
+            // Randomly determine number of trees for this chunk
+            int treeCount = UnityEngine.Random.Range(
+                terrainGenerator.minTreesPerChunk, 
+                terrainGenerator.maxTreesPerChunk + 1
+            );
+
+            for (int i = 0; i < treeCount; i++)
+            {
+                // Generate random position within chunk bounds
+                Vector2 randomPos2D = new Vector2(
+                    UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
+                    UnityEngine.Random.Range(bounds.min.y, bounds.max.y)
+                );
+
+                // Calculate world space position
+                Vector3 worldPosition = new Vector3(
+                    randomPos2D.x * mapgenerator.terraindata.uniformscale, 
+                    0, 
+                    randomPos2D.y * mapgenerator.terraindata.uniformscale
+                );
+
+                // Sample terrain height
+                float height = SampleTerrainHeight(randomPos2D);
+
+                // Adjust tree position to terrain height
+                worldPosition.y = height * mapgenerator.terraindata.uniformscale;
+
+                // Spawn tree
+                GameObject newTree = UnityEngine.Object.Instantiate(
+                    terrainGenerator.treePrefab, 
+                    worldPosition, 
+                    Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0)
+                );
+                newTree.transform.parent = meshObject.transform;
+
+                // Optional: Random scaling to add variety
+                float randomScale = UnityEngine.Random.Range(0.8f, 1.2f);
+                newTree.transform.localScale = Vector3.one * randomScale;
+
+                spawnedTrees.Add(newTree);
+            }
+        }
+
+        // New method to sample terrain height
+        float SampleTerrainHeight(Vector2 positionXZ)
+        {
+            // Normalize position relative to chunk
+            Vector2 normalizedPos = new Vector2(
+                Mathf.InverseLerp(bounds.min.x, bounds.max.x, positionXZ.x),
+                Mathf.InverseLerp(bounds.min.y, bounds.max.y, positionXZ.y)
+            );
+
+            // Check if heightMap is valid
+            if (mapdata.heightMap != null && 
+                mapdata.heightMap.GetLength(0) > 0 && 
+                mapdata.heightMap.GetLength(1) > 0)
+            {
+                int heightMapWidth = mapdata.heightMap.GetLength(0);
+                int heightMapHeight = mapdata.heightMap.GetLength(1);
+
+                // Convert normalized position to height map coordinates
+                int x = Mathf.FloorToInt(normalizedPos.x * (heightMapWidth - 1));
+                int y = Mathf.FloorToInt(normalizedPos.y * (heightMapHeight - 1));
+
+                // Clamp to prevent out of bounds
+                x = Mathf.Clamp(x, 0, heightMapWidth - 1);
+                y = Mathf.Clamp(y, 0, heightMapHeight - 1);
+
+                // Return the height from the height map
+                return mapdata.heightMap[x, y];
+            }
+
+            // Fallback if no height map is available
+            return 0f;
         }
 
         void OnMapDataReceived(MapGenerator.MapData mapdata)
@@ -136,8 +231,8 @@ public class InfiniteTerrain : MonoBehaviour
         {
             if(mapdatareceived)
             {
-                float viewerDistanceFromNearestEdge = bounds.SqrDistance(viewerPosition);
-                bool visible = viewerDistanceFromNearestEdge <= maxViewDistance * maxViewDistance;
+                float viewerDistanceFromNearestEdge = bounds.SqrDistance(InfiniteTerrain.viewerPosition);
+                bool visible = viewerDistanceFromNearestEdge <= InfiniteTerrain.maxViewDistance * InfiniteTerrain.maxViewDistance;
                 if(visible)
                 {
                     int lodindex = 0;
@@ -154,7 +249,7 @@ public class InfiniteTerrain : MonoBehaviour
                     }
                     if(lodindex != prevlodindex)
                     {
-                        LODMesh lodmesh = lodmeshes[lodindex];
+                        InfiniteTerrain.LODMesh lodmesh = lodmeshes[lodindex];
                         if(lodmesh.hasMesh)
                         {
                             prevlodindex = lodindex;
@@ -176,8 +271,22 @@ public class InfiniteTerrain : MonoBehaviour
                             collisionLODmesh.RequestMesh(mapdata);
                         }
                     }
-                    terrainChunksVisibleLastUpdate.Add(this);
-                }  
+                    InfiniteTerrain.terrainChunksVisibleLastUpdate.Add(this);
+                    if(spawnedTrees.Count == 0)
+                    {
+                        SpawnTrees();
+                    }
+                }
+                else
+                {
+                    foreach (GameObject tree in spawnedTrees)
+                    {
+                        if (tree != null)
+                            UnityEngine.Object.Destroy(tree);
+                    }
+                    spawnedTrees.Clear();
+            
+                }
                 SetVisible(visible);   
             }                 
         }
@@ -193,7 +302,7 @@ public class InfiniteTerrain : MonoBehaviour
         }
     }
 
-    class LODMesh 
+    public class LODMesh 
     {
         public Mesh mesh;
         public bool hasRequestedMesh;

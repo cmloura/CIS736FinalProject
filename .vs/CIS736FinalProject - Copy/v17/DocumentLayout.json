@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "D:\\cis763\\CIS736FinalProject - Copy\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\cis763\\CIS736FinalProject - Copy\\Assets\\Scripts\\InfiniteTerrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\InfiniteTerrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\cis763\\CIS736FinalProject - Copy\\Assets\\Scripts\\TerrainChunk.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\TerrainChunk.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\cis763\\CIS736FinalProject - Copy\\Assets\\Scripts\\PlayerSpawn.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\PlayerSpawn.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\cis763\\CIS736FinalProject - Copy\\Assets\\HandleScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\HandleScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\cis763\\CIS736FinalProject - Copy\\Temp\\GeneratedFromGraph-TerrainShader.shader||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Temp\\GeneratedFromGraph-TerrainShader.shader||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
@@ -27,19 +43,66 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "GeneratedFromGraph-TerrainShader.shader",
-              "DocumentMoniker": "D:\\cis763\\CIS736FinalProject - Copy\\Temp\\GeneratedFromGraph-TerrainShader.shader",
-              "RelativeDocumentMoniker": "Temp\\GeneratedFromGraph-TerrainShader.shader",
-              "ToolTip": "D:\\cis763\\CIS736FinalProject - Copy\\Temp\\GeneratedFromGraph-TerrainShader.shader",
-              "RelativeToolTip": "Temp\\GeneratedFromGraph-TerrainShader.shader",
-              "ViewState": "AQIAAPwMAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-11-18T05:07:37.689Z",
+              "Title": "InfiniteTerrain.cs",
+              "DocumentMoniker": "D:\\cis763\\CIS736FinalProject - Copy\\Assets\\Scripts\\InfiniteTerrain.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\InfiniteTerrain.cs",
+              "ToolTip": "D:\\cis763\\CIS736FinalProject - Copy\\Assets\\Scripts\\InfiniteTerrain.cs",
+              "RelativeToolTip": "Assets\\Scripts\\InfiniteTerrain.cs",
+              "ViewState": "AQIAAK8AAAAAAAAAAADgv8IAAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-01T01:36:21.095Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "TerrainChunk.cs",
+              "DocumentMoniker": "D:\\cis763\\CIS736FinalProject - Copy\\Assets\\Scripts\\TerrainChunk.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\TerrainChunk.cs",
+              "ToolTip": "D:\\cis763\\CIS736FinalProject - Copy\\Assets\\Scripts\\TerrainChunk.cs",
+              "RelativeToolTip": "Assets\\Scripts\\TerrainChunk.cs",
+              "ViewState": "AQIAAD0AAAAAAAAAAADgv1AAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-01T01:28:08.657Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PlayerSpawn.cs",
+              "DocumentMoniker": "D:\\cis763\\CIS736FinalProject - Copy\\Assets\\Scripts\\PlayerSpawn.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerSpawn.cs",
+              "ToolTip": "D:\\cis763\\CIS736FinalProject - Copy\\Assets\\Scripts\\PlayerSpawn.cs",
+              "RelativeToolTip": "Assets\\Scripts\\PlayerSpawn.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-30T22:39:37.03Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "HandleScript.cs",
+              "DocumentMoniker": "D:\\cis763\\CIS736FinalProject - Copy\\Assets\\HandleScript.cs",
+              "RelativeDocumentMoniker": "Assets\\HandleScript.cs",
+              "ToolTip": "D:\\cis763\\CIS736FinalProject - Copy\\Assets\\HandleScript.cs",
+              "RelativeToolTip": "Assets\\HandleScript.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-30T22:36:23.215Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GeneratedFromGraph-TerrainShader.shader",
+              "DocumentMoniker": "D:\\cis763\\CIS736FinalProject - Copy\\Temp\\GeneratedFromGraph-TerrainShader.shader",
+              "RelativeDocumentMoniker": "Temp\\GeneratedFromGraph-TerrainShader.shader",
+              "ToolTip": "D:\\cis763\\CIS736FinalProject - Copy\\Temp\\GeneratedFromGraph-TerrainShader.shader",
+              "RelativeToolTip": "Temp\\GeneratedFromGraph-TerrainShader.shader",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-11-18T05:07:37.689Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "ThirdPersonMovement.cs",
               "DocumentMoniker": "D:\\cis763\\CIS736FinalProject - Copy\\Assets\\Scripts\\ThirdPersonMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ThirdPersonMovement.cs",

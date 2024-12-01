@@ -79,7 +79,6 @@ public static class Noise
                 }
             }
         }
-
         return noiseMap;
     }
 }

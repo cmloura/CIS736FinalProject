@@ -388,8 +388,14 @@
 "Assets/Scripts/MapGenerator.cs"
 "Assets/Scripts/MeshGenerator.cs"
 "Assets/Scripts/Noise.cs"
+"Assets/Scripts/PlacementGenerator.cs"
+"Assets/Scripts/PlayerSpawn.cs"
+"Assets/Scripts/SeedGenerator.cs"
+"Assets/Scripts/TerrainHeightUtility.cs"
 "Assets/Scripts/TextureGenerator.cs"
 "Assets/Scripts/ThirdPersonMovement.cs"
+"Assets/Scripts/TreeGenerator.cs"
+"Assets/Scripts/WaterGenerator.cs"
 "Assets/SliderScript.cs"
 -langversion:9.0
 /deterministic
