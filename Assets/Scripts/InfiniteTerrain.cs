@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class InfiniteTerrain : MonoBehaviour
 {
@@ -79,7 +80,7 @@ public class InfiniteTerrain : MonoBehaviour
 
     public class TerrainChunk
     {
-        Vector2 position;
+        public Vector2 position;
         GameObject meshObject;
         Bounds bounds;
         MeshRenderer meshrenderer;
@@ -92,7 +93,7 @@ public class InfiniteTerrain : MonoBehaviour
         bool mapdatareceived;
         int prevlodindex = -1;
         private List<GameObject> spawnedTrees = new();
-
+        InfiniteTerrain infiniteterrain = new InfiniteTerrain();
 
         public TerrainChunk(Vector2 coord, int size, InfiniteTerrain.LODInfo[] detaillevels, Transform parent, Material material)
         {
@@ -127,62 +128,56 @@ public class InfiniteTerrain : MonoBehaviour
 
         void SpawnTrees()
         {
-            // Get reference to the tree spawning parameters from the InfiniteTerrain instance
-            InfiniteTerrain terrainGenerator = UnityEngine.Object.FindObjectOfType<InfiniteTerrain>();
+            InfiniteTerrain terrainGenerator = InfiniteTerrain.mapgenerator.GetComponent<InfiniteTerrain>();
             if (terrainGenerator == null || terrainGenerator.treePrefab == null) return;
 
-            // Clear any previously spawned trees
-            foreach (GameObject tree in spawnedTrees)
+            foreach (GameObject tree in spawnedTrees.ToArray())
             {
                 if (tree != null)
                     UnityEngine.Object.Destroy(tree);
             }
             spawnedTrees.Clear();
 
-            // Randomly determine number of trees for this chunk
-            int treeCount = UnityEngine.Random.Range(
-                terrainGenerator.minTreesPerChunk, 
-                terrainGenerator.maxTreesPerChunk + 1
-            );
+            int treeCount = Random.Range(terrainGenerator.minTreesPerChunk, terrainGenerator.maxTreesPerChunk + 1);
 
             for (int i = 0; i < treeCount; i++)
             {
-                // Generate random position within chunk bounds
                 Vector2 randomPos2D = new Vector2(
-                    UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
-                    UnityEngine.Random.Range(bounds.min.y, bounds.max.y)
+                    Random.Range(bounds.min.x, bounds.max.x),
+                    Random.Range(bounds.min.y, bounds.max.y)
                 );
 
-                // Calculate world space position
-                Vector3 worldPosition = new Vector3(
-                    randomPos2D.x * mapgenerator.terraindata.uniformscale, 
-                    0, 
-                    randomPos2D.y * mapgenerator.terraindata.uniformscale
-                );
-
-                // Sample terrain height
                 float height = SampleTerrainHeight(randomPos2D);
 
-                // Adjust tree position to terrain height
-                worldPosition.y = height * mapgenerator.terraindata.uniformscale;
-
-                // Spawn tree
-                GameObject newTree = UnityEngine.Object.Instantiate(
-                    terrainGenerator.treePrefab, 
-                    worldPosition, 
-                    Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0)
+                Vector3 worldPosition = new Vector3(
+                    randomPos2D.x * InfiniteTerrain.mapgenerator.terraindata.uniformscale, 
+                    height * InfiniteTerrain.mapgenerator.terraindata.uniformscale, 
+                    randomPos2D.y * InfiniteTerrain.mapgenerator.terraindata.uniformscale
                 );
-                newTree.transform.parent = meshObject.transform;
 
-                // Optional: Random scaling to add variety
-                float randomScale = UnityEngine.Random.Range(0.8f, 1.2f);
-                newTree.transform.localScale = Vector3.one * randomScale;
+                if (Physics.Raycast(worldPosition + Vector3.up * 100, Vector3.down, out RaycastHit hit, Mathf.Infinity))
+                {
+                    if (hit.point.y < height * InfiniteTerrain.mapgenerator.terraindata.uniformscale)
+                        continue;
 
-                spawnedTrees.Add(newTree);
+                    GameObject newTree = UnityEngine.Object.Instantiate(
+                        terrainGenerator.treePrefab, 
+                        hit.point, 
+                        Quaternion.Euler(0, Random.Range(0, 360), 0)
+                    );
+
+                    newTree.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal) * newTree.transform.rotation;
+
+                    newTree.transform.SetParent(meshObject.transform, true);
+
+                    float randomScale = Random.Range(0.8f, 1.2f);
+                    newTree.transform.localScale = Vector3.one * randomScale;
+
+                    spawnedTrees.Add(newTree);
+                }
             }
         }
-
-        // New method to sample terrain height
+    
         float SampleTerrainHeight(Vector2 positionXZ)
         {
             // Normalize position relative to chunk
