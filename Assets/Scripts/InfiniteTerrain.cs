@@ -15,7 +15,7 @@ public class InfiniteTerrain : MonoBehaviour
     public Material mapmaterial;
     Vector2 viewerpositionold;
     public static Vector2 viewerPosition;
-    public GameObject treePrefab;
+    public GameObject[] treePrefabs;
     public int minTreesPerChunk = 5;
     public int maxTreesPerChunk = 10;
 
@@ -129,7 +129,7 @@ public class InfiniteTerrain : MonoBehaviour
         void SpawnTrees()
         {
             InfiniteTerrain terrainGenerator = InfiniteTerrain.mapgenerator.GetComponent<InfiniteTerrain>();
-            if (terrainGenerator == null || terrainGenerator.treePrefab == null) return;
+            if (terrainGenerator == null || terrainGenerator.treePrefabs == null || terrainGenerator.treePrefabs.Length == 0) return;
 
             foreach (GameObject tree in spawnedTrees.ToArray())
             {
@@ -161,10 +161,13 @@ public class InfiniteTerrain : MonoBehaviour
                         continue;
 
                     GameObject newTree = UnityEngine.Object.Instantiate(
-                        terrainGenerator.treePrefab, 
+                        terrainGenerator.treePrefabs[(Random.Range(0, terrainGenerator.treePrefabs.Length))], 
                         hit.point, 
                         Quaternion.Euler(0, Random.Range(0, 360), 0)
                     );
+                    MeshRenderer meshrenderer = newTree.AddComponent<MeshRenderer>();
+                    MeshFilter meshfilter = newTree.AddComponent<MeshFilter>();
+                    MeshCollider meshcollider = newTree.AddComponent<MeshCollider>();
 
                     newTree.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal) * newTree.transform.rotation;
 
@@ -180,13 +183,11 @@ public class InfiniteTerrain : MonoBehaviour
     
         float SampleTerrainHeight(Vector2 positionXZ)
         {
-            // Normalize position relative to chunk
             Vector2 normalizedPos = new Vector2(
                 Mathf.InverseLerp(bounds.min.x, bounds.max.x, positionXZ.x),
                 Mathf.InverseLerp(bounds.min.y, bounds.max.y, positionXZ.y)
             );
 
-            // Check if heightMap is valid
             if (mapdata.heightMap != null && 
                 mapdata.heightMap.GetLength(0) > 0 && 
                 mapdata.heightMap.GetLength(1) > 0)
@@ -194,19 +195,15 @@ public class InfiniteTerrain : MonoBehaviour
                 int heightMapWidth = mapdata.heightMap.GetLength(0);
                 int heightMapHeight = mapdata.heightMap.GetLength(1);
 
-                // Convert normalized position to height map coordinates
                 int x = Mathf.FloorToInt(normalizedPos.x * (heightMapWidth - 1));
                 int y = Mathf.FloorToInt(normalizedPos.y * (heightMapHeight - 1));
 
-                // Clamp to prevent out of bounds
                 x = Mathf.Clamp(x, 0, heightMapWidth - 1);
                 y = Mathf.Clamp(y, 0, heightMapHeight - 1);
 
-                // Return the height from the height map
                 return mapdata.heightMap[x, y];
             }
 
-            // Fallback if no height map is available
             return 0f;
         }
 
