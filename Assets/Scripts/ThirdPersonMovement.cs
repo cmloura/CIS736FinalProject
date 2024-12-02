@@ -12,7 +12,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public Transform cam; // Camera reference for directional movement
     public Transform map;
-    public Transform fwks;
     public float walkSpeed = 6f;
     public float runSpeed = 18f;
     public float smooth = 0.1f;
