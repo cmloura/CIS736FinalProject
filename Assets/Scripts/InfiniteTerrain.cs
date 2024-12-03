@@ -165,10 +165,9 @@ public class InfiniteTerrain : MonoBehaviour
                         hit.point, 
                         Quaternion.Euler(0, Random.Range(0, 360), 0)
                     );
-                    MeshRenderer meshrenderer = newTree.AddComponent<MeshRenderer>();
-                    MeshFilter meshfilter = newTree.AddComponent<MeshFilter>();
-                    MeshCollider meshcollider = newTree.AddComponent<MeshCollider>();
 
+
+                    MeshCollider mc = newTree.AddComponent<MeshCollider>();
                     newTree.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal) * newTree.transform.rotation;
 
                     newTree.transform.SetParent(meshObject.transform, true);
@@ -251,6 +250,12 @@ public class InfiniteTerrain : MonoBehaviour
                         {
                             lodmesh.RequestMesh(mapdata);
                         }
+                        foreach (GameObject tree in spawnedTrees.ToArray())
+                        {
+                            if (tree != null)
+                                UnityEngine.Object.Destroy(tree);
+                        }
+                        spawnedTrees.Clear();
                     }
                     if(lodindex == 0)
                     {
@@ -262,22 +267,13 @@ public class InfiniteTerrain : MonoBehaviour
                         {
                             collisionLODmesh.RequestMesh(mapdata);
                         }
+
+                        if(spawnedTrees.Count == 0)
+                        {
+                            SpawnTrees();
+                        }
                     }
                     InfiniteTerrain.terrainChunksVisibleLastUpdate.Add(this);
-                    if(spawnedTrees.Count == 0)
-                    {
-                        SpawnTrees();
-                    }
-                }
-                else
-                {
-                    foreach (GameObject tree in spawnedTrees)
-                    {
-                        if (tree != null)
-                            UnityEngine.Object.Destroy(tree);
-                    }
-                    spawnedTrees.Clear();
-            
                 }
                 SetVisible(visible);   
             }                 
