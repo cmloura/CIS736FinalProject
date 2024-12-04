@@ -1,5 +1,4 @@
 # Ignore Unity generated folders
-Library/
 Logs/
 Temp/
 .vs/
