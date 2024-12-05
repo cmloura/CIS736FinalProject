@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: UpdatedTerrainMat
-  m_Shader: {fileID: -6465566751694194690, guid: dc91e9122f2ca8d45888e10f2ffb4837, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 02d8504837db0894987b78c4dbf1f36f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -81,7 +81,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Grass_Texture:
-        m_Texture: {fileID: 2800000, guid: 2b86b56698928104f987a029d6b41f19, type: 3}
+        m_Texture: {fileID: 2800000, guid: ff65bbda4313ff54291c31c4148d0e53, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -101,15 +101,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Rock_Texture:
-        m_Texture: {fileID: 2800000, guid: abc052e2edfae4a4f825cd3d2cecd3b8, type: 3}
+        m_Texture: {fileID: 2800000, guid: f67dc02efee79d64d83630c5ed4aa742, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Sand_Texture:
-        m_Texture: {fileID: 2800000, guid: e4cbf6c27a0afc34597cb86e98584fe4, type: 3}
+        m_Texture: {fileID: 2800000, guid: b9711c209a6895a45a7f059718cf0feb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Snow_Texture:
-        m_Texture: {fileID: 2800000, guid: 9d5fa356718a0f64ba41c1df0676861e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9eb9a59eed842364d89260f9dd5b8222, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -117,7 +117,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Water_Texture:
-        m_Texture: {fileID: 2800000, guid: e211eb5ceb07357489aaca2b6b3dfe27, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8c08f648c67dfbd429b30ee406747408, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:

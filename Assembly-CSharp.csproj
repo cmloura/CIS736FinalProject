@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{D0044344-AD5B-0778-3765-951C141C198C}</ProjectGuid>
+    <ProjectGuid>{D18AAD5A-CE8A-648A-D9ED-6F7F468AEBAD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -61,28 +61,22 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Data\TerrainData.cs" />
     <Compile Include="Assets\Scripts\HideOnPlay.cs" />
-    <Compile Include="Assets\Scripts\PlacementGenerator.cs" />
-    <Compile Include="Assets\Scripts\WaterGenerator.cs" />
-    <Compile Include="Assets\Animations\PlayerInput.cs" />
-    <Compile Include="Assets\Scripts\MapGenerator.cs" />
-    <Compile Include="Assets\Scripts\TreeGenerator.cs" />
-    <Compile Include="Assets\Scripts\FalloffGenerator.cs" />
-    <Compile Include="Assets\HandleScript.cs" />
-    <Compile Include="Assets\Scripts\TextureGenerator.cs" />
-    <Compile Include="Assets\SliderScript.cs" />
-    <Compile Include="Assets\Scripts\PlayerSpawn.cs" />
-    <Compile Include="Assets\Scripts\AnimationAndMovementControl.cs" />
-    <Compile Include="Assets\Scripts\MapDisplay.cs" />
-    <Compile Include="Assets\MainMenu.cs" />
     <Compile Include="Assets\Scripts\InfiniteTerrain.cs" />
     <Compile Include="Assets\Scripts\Data\TextureData.cs" />
     <Compile Include="Assets\Scripts\Noise.cs" />
+    <Compile Include="Assets\Animations\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\MeshGenerator.cs" />
+    <Compile Include="Assets\Scripts\MapGenerator.cs" />
+    <Compile Include="Assets\Scripts\FalloffGenerator.cs" />
     <Compile Include="Assets\Scripts\Data\NoiseData.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonMovement.cs" />
-    <Compile Include="Assets\Scripts\SeedGenerator.cs" />
+    <Compile Include="Assets\HandleScript.cs" />
+    <Compile Include="Assets\Scripts\TextureGenerator.cs" />
+    <Compile Include="Assets\SliderScript.cs" />
+    <Compile Include="Assets\Scripts\AnimationAndMovementControl.cs" />
     <Compile Include="Assets\Scripts\Data\UpdateableData.cs" />
-    <Compile Include="Assets\Scripts\TerrainHeightUtility.cs" />
+    <Compile Include="Assets\Scripts\MapDisplay.cs" />
+    <Compile Include="Assets\MainMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -16,8 +16,10 @@ public class InfiniteTerrain : MonoBehaviour
     Vector2 viewerpositionold;
     public static Vector2 viewerPosition;
     public GameObject[] treePrefabs;
+    public GameObject grassPrefab;
     public int minTreesPerChunk = 5;
     public int maxTreesPerChunk = 10;
+    public int grassperchunk;
 
     int chunksize;
     int chunksVisibleInViewDistance;
@@ -93,6 +95,7 @@ public class InfiniteTerrain : MonoBehaviour
         bool mapdatareceived;
         int prevlodindex = -1;
         private List<GameObject> spawnedTrees = new();
+        private List<GameObject> spawnedGrass = new();
         InfiniteTerrain infiniteterrain = new InfiniteTerrain();
 
         public TerrainChunk(Vector2 coord, int size, InfiniteTerrain.LODInfo[] detaillevels, Transform parent, Material material)
@@ -179,6 +182,65 @@ public class InfiniteTerrain : MonoBehaviour
                 }
             }
         }
+
+        void SpawnGrass()
+        {
+            InfiniteTerrain terrainGenerator = InfiniteTerrain.mapgenerator.GetComponent<InfiniteTerrain>();
+            if (terrainGenerator == null || terrainGenerator.grassPrefab == null) return;
+
+            foreach (GameObject grass in spawnedGrass.ToArray())
+            {
+                if (grass != null)
+                    UnityEngine.Object.Destroy(grass);
+            }
+            spawnedGrass.Clear();
+
+            if(terrainGenerator.grassperchunk == 0)
+            {
+                terrainGenerator.grassperchunk = 500;
+            }
+            int grassCount = terrainGenerator.grassperchunk;
+
+            for (int i = 0; i < grassCount; i++)
+            {
+                Vector2 randomPos2D = new Vector2(
+                    Random.Range(bounds.min.x, bounds.max.x),
+                    Random.Range(bounds.min.y, bounds.max.y)
+                );
+
+                float height = SampleTerrainHeight(randomPos2D);
+
+                Vector3 worldPosition = new Vector3(
+                    randomPos2D.x * InfiniteTerrain.mapgenerator.terraindata.uniformscale, 
+                    height * InfiniteTerrain.mapgenerator.terraindata.uniformscale, 
+                    randomPos2D.y * InfiniteTerrain.mapgenerator.terraindata.uniformscale
+                );
+
+                if (Physics.Raycast(worldPosition + Vector3.up * 100, Vector3.down, out RaycastHit hit, Mathf.Infinity))
+                {
+                    if (hit.point.y < height * InfiniteTerrain.mapgenerator.terraindata.uniformscale)
+                        continue;
+
+                    GameObject newGrass = UnityEngine.Object.Instantiate(
+                        terrainGenerator.grassPrefab, 
+                        hit.point, 
+                        Quaternion.Euler(0, Random.Range(0, 360), 0),
+                        meshObject.transform
+                    );
+
+                    Renderer grassRenderer = newGrass.GetComponent<Renderer>();
+                    if (grassRenderer != null)
+                    {
+                        grassRenderer.material = new Material(terrainGenerator.grassPrefab.GetComponent<Renderer>().sharedMaterial);
+                    }
+
+                    float randomScale = Random.Range(0.8f, 1.2f);
+                    newGrass.transform.localScale = Vector3.one * randomScale;
+
+                    spawnedGrass.Add(newGrass);
+                }
+            }
+        }
     
         float SampleTerrainHeight(Vector2 positionXZ)
         {
@@ -256,6 +318,12 @@ public class InfiniteTerrain : MonoBehaviour
                                 UnityEngine.Object.Destroy(tree);
                         }
                         spawnedTrees.Clear();
+                        foreach(GameObject grass in spawnedGrass.ToArray())
+                        {
+                            if(grass != null)
+                                UnityEngine.Object.Destroy(grass);
+                        }       
+                        spawnedGrass.Clear();
                     }
                     if(lodindex == 0)
                     {
@@ -271,6 +339,10 @@ public class InfiniteTerrain : MonoBehaviour
                         if(spawnedTrees.Count == 0)
                         {
                             SpawnTrees();
+                        }
+                        if(spawnedGrass.Count == 0)
+                        {
+                            SpawnGrass();
                         }
                     }
                     InfiniteTerrain.terrainChunksVisibleLastUpdate.Add(this);
